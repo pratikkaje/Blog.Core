@@ -1,10 +1,12 @@
-﻿using EFxceptions;
+﻿using Blog.Core.Models.Posts;
+using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System.Threading.Tasks;
 
 namespace Blog.Core.Brokers.Storages
 {
-    public class StorageBroker : EFxceptionsContext, IStorageBroker
+    public partial class StorageBroker : EFxceptionsContext, IStorageBroker
     {
         private readonly IConfiguration configuration;
         public StorageBroker(IConfiguration configuration)

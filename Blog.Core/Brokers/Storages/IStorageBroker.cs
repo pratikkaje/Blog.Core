@@ -1,6 +1,10 @@
-﻿namespace Blog.Core.Brokers.Storages
+﻿using Blog.Core.Models.Posts;
+using System.Threading.Tasks;
+
+namespace Blog.Core.Brokers.Storages
 {
-    public interface IStorageBroker
+    public partial interface IStorageBroker
     {
+        ValueTask<Post> InsertPostAsync(Post post);
     }
 }
