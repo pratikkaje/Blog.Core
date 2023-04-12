@@ -21,7 +21,9 @@ namespace Blog.Core.Services.Foundations.Posts
         }
         public ValueTask<Post> AddPostAsync(Post post)
         {
-            throw new System.NotImplementedException();
+            var addedPost = this.storageBroker.InsertPostAsync(post);
+
+            return addedPost;
         }
     }
 }
