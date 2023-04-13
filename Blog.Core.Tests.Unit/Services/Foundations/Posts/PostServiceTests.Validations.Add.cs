@@ -1,10 +1,6 @@
 ﻿using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -29,14 +25,14 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 this.postService.AddPostAsync(nullPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 addPostTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameValidationExceptionAs(
-                    expectedPostValidationException))),Times.Once);
+                    expectedPostValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertPostAsync(It.IsAny<Post>()),
                     Times.Never);
 

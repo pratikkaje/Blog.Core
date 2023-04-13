@@ -74,7 +74,7 @@ namespace Blog.Core.Infrastructure.Build
 
             adotNetClient.SerializeAndWriteToFile(
                 githubPipeline,
-                path:"../../../../.github/workflows/provision.yml"
+                path: "../../../../.github/workflows/provision.yml"
                 );
         }
     }

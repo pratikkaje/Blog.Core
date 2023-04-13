@@ -1,8 +1,6 @@
-﻿using Blog.Core.Models.Posts;
-using EFxceptions;
+﻿using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Threading.Tasks;
 
 namespace Blog.Core.Brokers.Storages
 {

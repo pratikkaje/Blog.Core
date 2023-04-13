@@ -10,10 +10,10 @@ namespace Blog.Core.Brokers.Storages
         public DbSet<Post> Posts { get; set; }
         public async ValueTask<Post> InsertPostAsync(Post post)
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(this.configuration);
 
-            EntityEntry<Post> postEntityEntry = 
+            EntityEntry<Post> postEntityEntry =
                 await broker.Posts.AddAsync(post);
 
             await broker.SaveChangesAsync();

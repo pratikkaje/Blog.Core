@@ -1,10 +1,6 @@
 ﻿using Blog.Core.Models.Posts;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -20,19 +16,19 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             Post inputPost = randomPost;
             Post storagePost = inputPost;
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.InsertPostAsync(inputPost)).ReturnsAsync(storagePost);
 
             // when
-            Post actualPost = 
+            Post actualPost =
                 await this.postService.AddPostAsync(inputPost);
 
             // then
             actualPost.Should().BeEquivalentTo(storagePost);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.InsertPostAsync(It.IsAny<Post>())
-                    ,Times.Once);
+                    , Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
