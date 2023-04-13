@@ -7,9 +7,11 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 {
@@ -46,5 +48,12 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             return filler;
         }
 
+        private static Expression<Func<Exception, bool>> SameValidationExceptionAs(Exception expectedException)
+        {
+            return actualException =>
+            actualException.Message == expectedException.Message
+            && actualException.InnerException.Message == expectedException.InnerException.Message
+            && (actualException.InnerException as Xeption).DataEquals(expectedException.InnerException.Data);
+        }
     }
 }
