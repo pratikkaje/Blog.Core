@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Blog.Core.Services.Foundations.Posts
 {
-    public class PostService : IPostService
+    public partial class PostService : IPostService
     {
         private readonly IStorageBroker storageBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -19,11 +19,13 @@ namespace Blog.Core.Services.Foundations.Posts
             this.loggingBroker = loggingBroker;
             this.dateTimeBroker = dateTimeBroker;
         }
-        public ValueTask<Post> AddPostAsync(Post post)
-        {
-            var addedPost = this.storageBroker.InsertPostAsync(post);
 
-            return addedPost;
-        }
+        public ValueTask<Post> AddPostAsync(Post post) =>
+            TryCatch(async () =>
+            {
+                ValidatePost(post);
+
+                return await this.storageBroker.InsertPostAsync(post);
+            });
     }
 }
