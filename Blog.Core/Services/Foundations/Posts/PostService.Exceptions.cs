@@ -20,6 +20,10 @@ namespace Blog.Core.Services.Foundations.Posts
             {
                 throw CreateAndLogValidationException(nullPostException);
             }
+            catch (InvalidPostException invalidPostException)
+            {
+                throw CreateAndLogValidationException(invalidPostException);
+            }
         }
 
         private PostValidationException CreateAndLogValidationException(Xeption exception)
