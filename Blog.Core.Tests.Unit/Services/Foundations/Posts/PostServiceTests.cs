@@ -29,8 +29,14 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
+        private static int GetRandomNumber() =>
+            new IntRange(min: 2, max: 10).GetValue();
+
         private static Post CreateRandomPost() =>
             CreatePostFiller(dates: GetRandomDateTimeOffset()).Create();
+
+        private static Post CreateRandomPost(DateTimeOffset dates) =>
+            CreatePostFiller(dates: dates).Create();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();

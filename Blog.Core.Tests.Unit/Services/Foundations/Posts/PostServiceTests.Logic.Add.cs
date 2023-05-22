@@ -27,8 +27,8 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             actualPost.Should().BeEquivalentTo(storagePost);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.InsertPostAsync(It.IsAny<Post>())
-                    , Times.Once);
+                broker.InsertPostAsync(It.IsAny<Post>()),
+                Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
