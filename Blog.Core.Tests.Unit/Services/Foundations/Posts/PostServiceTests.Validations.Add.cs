@@ -64,7 +64,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 values: "Text is required.");
 
             invalidPostException.AddData(
-                key: nameof(Post.BriefDescription),
+                key: nameof(Post.SubTitle),
                 values: "Text is required.");
 
             invalidPostException.AddData(

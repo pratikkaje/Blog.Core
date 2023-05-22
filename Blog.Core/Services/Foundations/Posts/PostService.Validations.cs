@@ -14,7 +14,7 @@ namespace Blog.Core.Services.Foundations.Posts
             Validate(
                 (Rule: IsInvalid(post.Id), Parameter: nameof(post.Id)),
                 (Rule: IsInvalid(post.Title), Parameter: nameof(post.Title)),
-                (Rule: IsInvalid(post.BriefDescription), Parameter: nameof(post.BriefDescription)),
+                (Rule: IsInvalid(post.SubTitle), Parameter: nameof(post.SubTitle)),
                 (Rule: IsInvalid(post.Content), Parameter: nameof(post.Content)),
                 (Rule: IsInvalid(post.Author), Parameter: nameof(post.Author)),
                 (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(post.CreatedDate)),
