@@ -1,8 +1,8 @@
-﻿using Blog.Core.Brokers.DateTimes;
+﻿using System.Threading.Tasks;
+using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
 using Blog.Core.Brokers.Storages;
 using Blog.Core.Models.Posts;
-using System.Threading.Tasks;
 
 namespace Blog.Core.Services.Foundations.Posts
 {

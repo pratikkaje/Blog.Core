@@ -1,8 +1,7 @@
-﻿using Blog.Core.Models.Posts;
+﻿using System.Threading.Tasks;
+using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
@@ -48,12 +47,12 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
         public async Task ShouldThrowValidationExceptionOnAddIfPostIsInvalidAndLogItAsync(string invalidText)
         {
             // given
-            var invalidPost = new Post 
-            { 
-                Title = invalidText 
+            var invalidPost = new Post
+            {
+                Title = invalidText
             };
 
-            var invalidPostException = 
+            var invalidPostException =
                 new InvalidPostException();
 
             invalidPostException.AddData(
@@ -61,41 +60,41 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 values: "Id is required.");
 
             invalidPostException.AddData(
-                key: nameof(Post.Title), 
+                key: nameof(Post.Title),
                 values: "Text is required.");
 
             invalidPostException.AddData(
-                key: nameof(Post.BriefDescription), 
+                key: nameof(Post.BriefDescription),
                 values: "Text is required.");
 
             invalidPostException.AddData(
                 key: nameof(Post.Content),
-                values:"Text is required.");
+                values: "Text is required.");
 
             invalidPostException.AddData(
                 key: nameof(Post.Author),
                 values: "Text is required.");
 
             invalidPostException.AddData(
-                key: nameof(Post.CreatedDate), 
+                key: nameof(Post.CreatedDate),
                 values: "Date is required.");
 
             invalidPostException.AddData(
-                key: nameof(Post.UpdatedDate), 
+                key: nameof(Post.UpdatedDate),
                 values: "Date is required.");
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
 
             // when
-            ValueTask<Post> addPostTask = 
+            ValueTask<Post> addPostTask =
                 this.postService.AddPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 addPostTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostValidationException))),
                     Times.Once);
@@ -107,6 +106,6 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
-        } 
+        }
     }
 }

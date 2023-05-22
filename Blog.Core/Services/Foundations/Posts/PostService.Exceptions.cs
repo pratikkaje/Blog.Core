@@ -1,6 +1,6 @@
-﻿using Blog.Core.Models.Posts;
+﻿using System.Threading.Tasks;
+using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
-using System.Threading.Tasks;
 using Xeptions;
 
 namespace Blog.Core.Services.Foundations.Posts

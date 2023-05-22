@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -14,8 +12,8 @@ namespace Blog.Core.Services.Foundations.Posts
             ValidatePostIsNotNull(post);
 
             Validate(
-                (Rule:IsInvalid(post.Id),Parameter:nameof(post.Id)),
-                (Rule:IsInvalid(post.Title),Parameter:nameof(post.Title)),
+                (Rule: IsInvalid(post.Id), Parameter: nameof(post.Id)),
+                (Rule: IsInvalid(post.Title), Parameter: nameof(post.Title)),
                 (Rule: IsInvalid(post.BriefDescription), Parameter: nameof(post.BriefDescription)),
                 (Rule: IsInvalid(post.Content), Parameter: nameof(post.Content)),
                 (Rule: IsInvalid(post.Author), Parameter: nameof(post.Author)),

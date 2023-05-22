@@ -1,7 +1,7 @@
-﻿using Blog.Core.Models.Posts;
+﻿using System.Threading.Tasks;
+using Blog.Core.Models.Posts;
 using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Core.Tests.Unit.Services.Foundations.Posts

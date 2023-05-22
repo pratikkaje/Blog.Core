@@ -1,7 +1,7 @@
-﻿using Blog.Core.Models.Posts;
+﻿using System.Threading.Tasks;
+using Blog.Core.Models.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Threading.Tasks;
 
 namespace Blog.Core.Brokers.Storages
 {

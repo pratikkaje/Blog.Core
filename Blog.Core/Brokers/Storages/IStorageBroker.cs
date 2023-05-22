@@ -1,5 +1,5 @@
-﻿using Blog.Core.Models.Posts;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Blog.Core.Models.Posts;
 
 namespace Blog.Core.Brokers.Storages
 {

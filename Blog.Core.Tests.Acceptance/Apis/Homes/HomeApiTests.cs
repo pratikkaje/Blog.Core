@@ -1,6 +1,6 @@
-﻿using Blog.Core.Tests.Acceptance.Brokers;
+﻿using System.Threading.Tasks;
+using Blog.Core.Tests.Acceptance.Brokers;
 using FluentAssertions;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Blog.Core.Tests.Acceptance.Apis.Homes

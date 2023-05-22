@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+﻿using System.Net.Http;
+using Microsoft.AspNetCore.Mvc.Testing;
 using RESTFulSense.Clients;
-using System.Net.Http;
 
 namespace Blog.Core.Tests.Acceptance.Brokers
 {
