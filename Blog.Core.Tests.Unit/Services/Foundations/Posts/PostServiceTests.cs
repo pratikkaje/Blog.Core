@@ -8,6 +8,7 @@ using Blog.Core.Services.Foundations.Posts;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 {
@@ -28,6 +29,20 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 loggingBroker: this.loggingBrokerMock.Object,
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
+
+        public static TheoryData MinutesBeforeOrAfter()
+        {
+            int randomNumber = GetRandomNumber();
+            int randomNegativeNumber = GetRandomNegativeNumber();
+
+            return new TheoryData<int> {
+                randomNumber,
+                randomNegativeNumber
+            };
+        }
+
+        private static int GetRandomNegativeNumber() => 
+            -1 * new IntRange(min: 2, max: 10).GetValue();
 
         private static int GetRandomNumber() =>
             new IntRange(min: 2, max: 10).GetValue();
