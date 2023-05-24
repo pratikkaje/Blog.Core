@@ -119,10 +119,6 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             Post randomPost = CreateRandomPost(randomDateTime);
             Post invalidPost = randomPost;
 
-            this.dateTimeBrokerMock.Setup(broker => 
-                broker.GetCurrentDateTimeOffset())
-                    .Returns(randomDateTime);
-
             invalidPost.UpdatedDate = 
                 invalidPost.CreatedDate.AddDays(randomNumber);
 
@@ -141,17 +137,13 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 this.postService.AddPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 addPostTask.AsTask());
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostValidationException))), 
                     Times.Once);
-
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
-                Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
                 broker.InsertPostAsync(It.IsAny<Post>()), 

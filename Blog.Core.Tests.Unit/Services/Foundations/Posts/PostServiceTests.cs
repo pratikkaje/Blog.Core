@@ -50,7 +50,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             return filler;
         }
 
-        private static Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
     }
 }

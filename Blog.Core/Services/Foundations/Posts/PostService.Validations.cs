@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -18,8 +19,41 @@ namespace Blog.Core.Services.Foundations.Posts
                 (Rule: IsInvalid(post.Content), Parameter: nameof(post.Content)),
                 (Rule: IsInvalid(post.Author), Parameter: nameof(post.Author)),
                 (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(post.CreatedDate)),
-                (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)));
+                (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)),
+
+                (Rule: IsNotSame(firstDate: post.UpdatedDate,
+                secondDate: post.CreatedDate,
+                secondDateName: nameof(post.CreatedDate)),
+                Parameter: nameof(post.UpdatedDate))
+
+                //(Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(Post.CreatedDate))
+                );
         }
+
+        private dynamic IsNotRecent(DateTimeOffset date) => new
+        {
+            Condition = IsDateNotRecent(date),
+            Message = "Date is not recent"
+        };
+
+        private bool IsDateNotRecent(DateTimeOffset date)
+        {
+            DateTimeOffset currentDateTime =
+                this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            TimeSpan timeDifference = currentDateTime.Subtract(date);
+            TimeSpan oneMinute = TimeSpan.FromMinutes(1);
+
+            return timeDifference.Duration() > oneMinute;
+        }
+
+        private static dynamic IsNotSame(DateTimeOffset firstDate, 
+            DateTimeOffset secondDate, 
+            string secondDateName) => new
+        {
+            Condition = firstDate != secondDate,
+            Message = $"Date is not same as the {secondDateName}"
+        };
 
         private static void ValidatePostIsNotNull(Post post)
         {
