@@ -107,7 +107,6 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
 
         [Fact]
@@ -118,6 +117,10 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             int randomNumber = GetRandomNumber();
             Post randomPost = CreateRandomPost(randomDateTime);
             Post invalidPost = randomPost;
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTime);
 
             invalidPost.UpdatedDate = 
                 invalidPost.CreatedDate.AddDays(randomNumber);
@@ -144,6 +147,10 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostValidationException))), 
                     Times.Once);
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(), 
+                Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
                 broker.InsertPostAsync(It.IsAny<Post>()), 

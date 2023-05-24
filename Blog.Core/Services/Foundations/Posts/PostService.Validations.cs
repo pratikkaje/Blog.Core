@@ -24,16 +24,16 @@ namespace Blog.Core.Services.Foundations.Posts
                 (Rule: IsNotSame(firstDate: post.UpdatedDate,
                 secondDate: post.CreatedDate,
                 secondDateName: nameof(post.CreatedDate)),
-                Parameter: nameof(post.UpdatedDate))
+                Parameter: nameof(post.UpdatedDate)),
 
-                //(Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(Post.CreatedDate))
+                (Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(Post.CreatedDate))
                 );
         }
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),
-            Message = "Date is not recent"
+            Message = "Date is not recent."
         };
 
         private bool IsDateNotRecent(DateTimeOffset date)
