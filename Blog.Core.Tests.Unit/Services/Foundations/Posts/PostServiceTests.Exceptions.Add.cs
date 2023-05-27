@@ -7,6 +7,7 @@ using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -103,5 +104,50 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyExceptionOnAddIfDatabaseUpdateErrorOccursAndLogItAsync()
+        {
+            // given
+            var somePost = CreateRandomPost();
+
+            var dbUpdateException = new DbUpdateException();
+
+            var failedPostStorageException = 
+                new FailedPostStorageException(dbUpdateException);
+
+            var expectedPostDependencyException = 
+                new PostDependencyException(failedPostStorageException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateException);
+
+            // when
+            ValueTask<Post> addPostTask = 
+                this.postService.AddPostAsync(somePost);
+
+            // then
+            await Assert.ThrowsAsync<PostDependencyException>(() => 
+                addPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(),
+                Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostDependencyException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.InsertPostAsync(It.IsAny<Post>()), 
+                Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();            
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
+
     }
 }
