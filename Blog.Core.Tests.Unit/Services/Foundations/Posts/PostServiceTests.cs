@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
 using Blog.Core.Brokers.Storages;
 using Blog.Core.Models.Posts;
 using Blog.Core.Services.Foundations.Posts;
+using Microsoft.Data.SqlClient;
 using Moq;
 using Tynamix.ObjectFiller;
 using Xeptions;
@@ -30,6 +32,8 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
+        private static SqlException GetSqlException() =>
+            (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
         public static TheoryData MinutesBeforeOrAfter()
         {
             int randomNumber = GetRandomNumber();
