@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
+using Microsoft.Data.SqlClient;
 using Xeptions;
 
 namespace Blog.Core.Services.Foundations.Posts
@@ -24,6 +25,23 @@ namespace Blog.Core.Services.Foundations.Posts
             {
                 throw CreateAndLogValidationException(invalidPostException);
             }
+            catch (SqlException sqlException)
+            {
+                var failedPostStorageException = 
+                    new FailedPostStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedPostStorageException);
+            }
+        }
+
+        private PostDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var postDependencyException = 
+                new PostDependencyException(exception);
+
+            this.loggingBroker.LogCritical(postDependencyException);
+
+            throw postDependencyException;
         }
 
         private PostValidationException CreateAndLogValidationException(Xeption exception)
