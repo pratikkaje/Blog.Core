@@ -3,6 +3,7 @@ using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Xeptions;
 
 namespace Blog.Core.Services.Foundations.Posts
@@ -40,6 +41,23 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsPostException);
             }
+            catch (DbUpdateException dbUpdateException)
+            {
+                var failedPostStorageException = 
+                    new FailedPostStorageException(dbUpdateException);
+
+                throw CreateAndLogDependencyException(failedPostStorageException);
+            }
+        }
+
+        private PostDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var postDependencyException = 
+                new PostDependencyException(exception);
+
+            this.loggingBroker.LogError(postDependencyException);
+
+            return postDependencyException;
         }
 
         private PostDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
@@ -49,7 +67,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
             this.loggingBroker.LogError(postDependencyValdationException);
 
-            throw postDependencyValdationException;
+            return postDependencyValdationException;
         }
 
         private PostDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
@@ -59,7 +77,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
             this.loggingBroker.LogCritical(postDependencyException);
 
-            throw postDependencyException;
+            return postDependencyException;
         }
 
         private PostValidationException CreateAndLogValidationException(Xeption exception)
