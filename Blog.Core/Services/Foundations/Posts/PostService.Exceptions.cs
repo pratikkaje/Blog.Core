@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using EFxceptions.Models.Exceptions;
@@ -48,6 +49,23 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 throw CreateAndLogDependencyException(failedPostStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedPostServiceException = 
+                    new FailedPostServiceException(exception);
+
+                throw CreateAndLogServiceException(failedPostServiceException);
+            }
+        }
+
+        private PostServiceException CreateAndLogServiceException(Exception exception)
+        {
+            var postServiceException = 
+                new PostServiceException(exception);
+
+            this.loggingBroker.LogError(postServiceException);
+
+            return postServiceException;
         }
 
         private PostDependencyException CreateAndLogDependencyException(Xeption exception)
