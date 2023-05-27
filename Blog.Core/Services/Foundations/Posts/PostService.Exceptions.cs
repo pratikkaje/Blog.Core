@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
+using EFxceptions.Models.Exceptions;
 using Microsoft.Data.SqlClient;
 using Xeptions;
 
@@ -32,6 +33,23 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
+            catch (DuplicateKeyException duplicateKeyException)
+            {
+                var alreadyExistsPostException = 
+                    new AlreadyExistsPostException(duplicateKeyException);
+
+                throw CreateAndLogDependencyValidationException(alreadyExistsPostException);
+            }
+        }
+
+        private PostDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var postDependencyValdationException = 
+                new PostDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(postDependencyValdationException);
+
+            throw postDependencyValdationException;
         }
 
         private PostDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
