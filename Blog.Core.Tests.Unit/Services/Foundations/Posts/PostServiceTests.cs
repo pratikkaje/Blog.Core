@@ -32,6 +32,9 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 dateTimeBroker: this.dateTimeBrokerMock.Object);
         }
 
+        private static string GetRandomMessage() =>
+            new MnemonicString(wordCount: GetRandomNumber()).GetValue();
+
         private static SqlException GetSqlException() =>
             (SqlException)FormatterServices.GetUninitializedObject(typeof(SqlException));
         public static TheoryData MinutesBeforeOrAfter()
