@@ -19,7 +19,10 @@ namespace Blog.Core.Controllers
         [HttpPost]
         public async ValueTask<ActionResult<Post>> PostPostAsync(Post post)
         {
-                throw new NotImplementedException();
+            Post addedPost =
+                await this.postService.AddPostAsync(post);
+
+            return Created(addedPost);
         }
     }
 }
