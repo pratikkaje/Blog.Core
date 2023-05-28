@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Tests.Acceptance.Brokers;
 using Tynamix.ObjectFiller;
@@ -14,7 +10,7 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
     public partial class PostsApiTests
     {
         private readonly ApiBroker apiBroker;
-        public PostsApiTests(ApiBroker apiBroker) => 
+        public PostsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
 
         private static Post CreateRandomPost() =>

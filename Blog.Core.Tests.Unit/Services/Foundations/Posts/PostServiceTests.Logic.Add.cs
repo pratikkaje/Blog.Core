@@ -35,8 +35,8 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                 Times.Once);
 
             this.storageBrokerMock.Verify(broker =>

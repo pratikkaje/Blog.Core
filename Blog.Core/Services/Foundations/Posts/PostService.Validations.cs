@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -46,13 +45,13 @@ namespace Blog.Core.Services.Foundations.Posts
             return timeDifference.Duration() > oneMinute;
         }
 
-        private static dynamic IsNotSame(DateTimeOffset firstDate, 
-            DateTimeOffset secondDate, 
+        private static dynamic IsNotSame(DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
             string secondDateName) => new
-        {
-            Condition = firstDate != secondDate,
-            Message = $"Date is not same as the {secondDateName}"
-        };
+            {
+                Condition = firstDate != secondDate,
+                Message = $"Date is not same as the {secondDateName}"
+            };
 
         private static void ValidatePostIsNotNull(Post post)
         {

@@ -48,7 +48,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             };
         }
 
-        private static int GetRandomNegativeNumber() => 
+        private static int GetRandomNegativeNumber() =>
             -1 * new IntRange(min: 2, max: 10).GetValue();
 
         private static int GetRandomNumber() =>

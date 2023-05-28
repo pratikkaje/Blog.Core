@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Services.Foundations.Posts;
 using Microsoft.AspNetCore.Mvc;

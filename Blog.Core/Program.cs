@@ -20,7 +20,7 @@ namespace Blog.Core
             builder.Services.AddTransient<ILoggingBroker, LoggingBroker>();
             builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
-            builder.Services.AddTransient<IPostService,PostService>();
+            builder.Services.AddTransient<IPostService, PostService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

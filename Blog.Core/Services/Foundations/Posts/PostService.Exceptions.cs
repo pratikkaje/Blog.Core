@@ -30,28 +30,28 @@ namespace Blog.Core.Services.Foundations.Posts
             }
             catch (SqlException sqlException)
             {
-                var failedPostStorageException = 
+                var failedPostStorageException =
                     new FailedPostStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
             catch (DuplicateKeyException duplicateKeyException)
             {
-                var alreadyExistsPostException = 
+                var alreadyExistsPostException =
                     new AlreadyExistsPostException(duplicateKeyException);
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsPostException);
             }
             catch (DbUpdateException dbUpdateException)
             {
-                var failedPostStorageException = 
+                var failedPostStorageException =
                     new FailedPostStorageException(dbUpdateException);
 
                 throw CreateAndLogDependencyException(failedPostStorageException);
             }
             catch (Exception exception)
             {
-                var failedPostServiceException = 
+                var failedPostServiceException =
                     new FailedPostServiceException(exception);
 
                 throw CreateAndLogServiceException(failedPostServiceException);
@@ -60,7 +60,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         private PostServiceException CreateAndLogServiceException(Exception exception)
         {
-            var postServiceException = 
+            var postServiceException =
                 new PostServiceException(exception);
 
             this.loggingBroker.LogError(postServiceException);
@@ -70,7 +70,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         private PostDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var postDependencyException = 
+            var postDependencyException =
                 new PostDependencyException(exception);
 
             this.loggingBroker.LogError(postDependencyException);
@@ -80,7 +80,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         private PostDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var postDependencyValdationException = 
+            var postDependencyValdationException =
                 new PostDependencyValidationException(exception);
 
             this.loggingBroker.LogError(postDependencyValdationException);
@@ -90,7 +90,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         private PostDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var postDependencyException = 
+            var postDependencyException =
                 new PostDependencyException(exception);
 
             this.loggingBroker.LogCritical(postDependencyException);

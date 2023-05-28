@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
-using Microsoft.OpenApi.Models;
 using Moq;
 using Xunit;
 
@@ -118,25 +117,25 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             Post randomPost = CreateRandomPost(randomDateTime);
             Post invalidPost = randomPost;
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDateTime);
 
-            invalidPost.UpdatedDate = 
+            invalidPost.UpdatedDate =
                 invalidPost.CreatedDate.AddDays(randomNumber);
 
-            var invalidPostException = 
+            var invalidPostException =
                 new InvalidPostException();
 
             invalidPostException.AddData(
-                key: nameof(Post.UpdatedDate), 
+                key: nameof(Post.UpdatedDate),
                 values: $"Date is not same as the {nameof(Post.CreatedDate)}");
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
 
             // when
-            ValueTask<Post> addPostTask = 
+            ValueTask<Post> addPostTask =
                 this.postService.AddPostAsync(invalidPost);
 
             // then
@@ -145,15 +144,15 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedPostValidationException))), 
+                    expectedPostValidationException))),
                     Times.Once);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                 Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertPostAsync(It.IsAny<Post>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostAsync(It.IsAny<Post>()),
                 Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -167,26 +166,26 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             int minutesBeforeOrAfter)
         {
             // given
-            DateTimeOffset randomDateTime = 
+            DateTimeOffset randomDateTime =
                 GetRandomDateTimeOffset();
 
-            DateTimeOffset invalidDateTime = 
+            DateTimeOffset invalidDateTime =
                 randomDateTime.AddMinutes(minutesBeforeOrAfter);
-            
+
             var randomPost = CreateRandomPost(invalidDateTime);
             var invalidPost = randomPost;
 
-            var invalidPostException = 
+            var invalidPostException =
                 new InvalidPostException();
 
             invalidPostException.AddData(
                 key: nameof(Post.CreatedDate),
                 values: "Date is not recent.");
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                 .Returns(randomDateTime);
 
@@ -194,20 +193,20 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             ValueTask<Post> addPropertyTask = this.postService.AddPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 addPropertyTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker => 
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.InsertPostAsync(It.IsAny<Post>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.InsertPostAsync(It.IsAny<Post>()),
                 Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
