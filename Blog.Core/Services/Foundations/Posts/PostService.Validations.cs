@@ -7,8 +7,7 @@ namespace Blog.Core.Services.Foundations.Posts
 {
     public partial class PostService
     {
-
-        public void ValidatePost(Post post)
+        public void ValidatePostOnAdd(Post post)
         {
             ValidatePostIsNotNull(post);
 

@@ -23,7 +23,7 @@ namespace Blog.Core.Services.Foundations.Posts
         public ValueTask<Post> AddPostAsync(Post post) =>
             TryCatch(async () =>
             {
-                ValidatePost(post);
+                ValidatePostOnAdd(post);
 
                 return await this.storageBroker.InsertPostAsync(post);
             });
