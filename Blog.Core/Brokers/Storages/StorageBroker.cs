@@ -1,4 +1,6 @@
-﻿using EFxceptions;
+﻿using System.Linq;
+using Blog.Core.Models.Posts;
+using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -19,6 +20,14 @@ namespace Blog.Core.Brokers.Storages
             await broker.SaveChangesAsync();
 
             return postEntityEntry.Entity;
+        }
+
+        public IQueryable<Post> SelectAllPosts()
+        {
+            using var broker =
+                new StorageBroker(this.configuration);
+
+            return broker.Posts;
         }
     }
 }

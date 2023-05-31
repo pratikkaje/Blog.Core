@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using Blog.Core.Brokers.DateTimes;
@@ -56,6 +58,11 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 
         private static Post CreateRandomPost() =>
             CreatePostFiller(dates: GetRandomDateTimeOffset()).Create();
+
+        private static IQueryable<Post> CreateRandomPosts() =>
+            CreatePostFiller(dates: GetRandomDateTimeOffset())
+                .Create(GetRandomNumber())
+                    .AsQueryable();
 
         private static Post CreateRandomPost(DateTimeOffset dates) =>
             CreatePostFiller(dates: dates).Create();

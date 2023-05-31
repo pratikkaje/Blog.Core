@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
 using Blog.Core.Brokers.Storages;
@@ -27,5 +28,10 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 return await this.storageBroker.InsertPostAsync(post);
             });
+
+        public IQueryable<Post> RetrieveAllPosts()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
