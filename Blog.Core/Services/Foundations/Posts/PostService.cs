@@ -31,7 +31,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         public IQueryable<Post> RetrieveAllPosts()
         {
-            throw new System.NotImplementedException();
+            return this.storageBroker.SelectAllPosts();
         }
     }
 }
