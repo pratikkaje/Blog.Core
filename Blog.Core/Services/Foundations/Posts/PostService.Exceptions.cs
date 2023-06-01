@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
@@ -13,6 +14,22 @@ namespace Blog.Core.Services.Foundations.Posts
     {
 
         private delegate ValueTask<Post> ReturningPostFunction();
+        private delegate IQueryable<Post> ReturningPostsFunction();
+
+        private IQueryable<Post> TryCatch(ReturningPostsFunction returningPostsFunction)
+        {
+            try
+            {
+                return returningPostsFunction();
+            }
+            catch (SqlException sqlException)
+            {
+                var failedPostStorageException = 
+                    new FailedPostStorageException(sqlException);
+
+                throw CreateAndLogCriticalDependencyException(failedPostStorageException);
+            }
+        }
 
         private async ValueTask<Post> TryCatch(ReturningPostFunction returningPostFunction)
         {

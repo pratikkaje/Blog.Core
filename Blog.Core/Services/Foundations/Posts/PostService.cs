@@ -29,9 +29,7 @@ namespace Blog.Core.Services.Foundations.Posts
                 return await this.storageBroker.InsertPostAsync(post);
             });
 
-        public IQueryable<Post> RetrieveAllPosts()
-        {
-            return this.storageBroker.SelectAllPosts();
-        }
+        public IQueryable<Post> RetrieveAllPosts() =>
+            TryCatch(() => this.storageBroker.SelectAllPosts());            
     }
 }
