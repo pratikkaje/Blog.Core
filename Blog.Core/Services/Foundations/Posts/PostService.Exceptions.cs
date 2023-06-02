@@ -29,6 +29,13 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
+            catch (Exception exception)
+            {
+                var failedPostServiceException = 
+                    new FailedPostServiceException(exception);
+
+                throw CreateAndLogServiceException(failedPostServiceException);
+            }
         }
 
         private async ValueTask<Post> TryCatch(ReturningPostFunction returningPostFunction)
