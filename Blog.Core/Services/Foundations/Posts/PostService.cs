@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
@@ -30,6 +31,11 @@ namespace Blog.Core.Services.Foundations.Posts
             });
 
         public IQueryable<Post> RetrieveAllPosts() =>
-            TryCatch(() => this.storageBroker.SelectAllPosts());            
+            TryCatch(() => this.storageBroker.SelectAllPosts());
+
+        public ValueTask<Post> RetrievePostByIdAsync(Guid PostId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,15 @@ namespace Blog.Core.Brokers.Storages
                 new StorageBroker(this.configuration);
 
             return broker.Posts;
+        }
+        public async ValueTask<Post> SelectPostByIdAsync(Guid postId)
+        {
+            using var broker = 
+                new StorageBroker(this.configuration);
+
+            var retrievedPost = await broker.Posts.FindAsync(postId);
+
+            return retrievedPost;
         }
     }
 }
