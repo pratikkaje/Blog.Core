@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Tests.Acceptance.Brokers;
 using Tynamix.ObjectFiller;
@@ -15,6 +18,35 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
 
         private static Post CreateRandomPost() =>
             CreateRandomPostFiller().Create();
+
+        private static int GetRandomNumber() =>
+            new IntRange(min:2, max:10).GetValue();
+
+        private static DateTimeOffset GetRandomDateTimeOffset() =>
+            new DateTimeRange(earliestDate: new DateTime()).GetValue();
+
+        private async ValueTask<List<Post>> CreateRandomPostedPostAsync()
+        {
+            var randomPost = CreateRandomPost();
+            int randomNumber = GetRandomNumber();
+            var randomPosts = new List<Post>();
+
+            for(int i=0; i < randomNumber; i++)
+            {
+                randomPosts.Add(await PostRandomPostAsync());
+            }
+
+            return randomPosts;
+        }
+
+        private async ValueTask<Post> PostRandomPostAsync()
+        {
+            var randomPost = CreateRandomPost();
+            var postedPost = 
+                await this.apiBroker.PostPostAsync(randomPost);
+
+            return postedPost;
+        }
 
         private static Filler<Post> CreateRandomPostFiller()
         {

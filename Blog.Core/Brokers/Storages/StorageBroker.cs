@@ -22,5 +22,7 @@ namespace Blog.Core.Brokers.Storages
 
             optionsBuilder.UseSqlServer(connectionString);
         }
+
+        public override void Dispose() { }
     }
 }

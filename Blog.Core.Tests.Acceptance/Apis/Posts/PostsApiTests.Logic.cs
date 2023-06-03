@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using FluentAssertions;
 using Xunit;
@@ -20,6 +22,29 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
 
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
+        }
+
+        [Fact]
+        public async Task ShouldGetAllPostsAsync()
+        {
+            // given
+            List<Post> randomPosts = await CreateRandomPostedPostAsync();
+
+            List<Post> expectedPosts = randomPosts;
+
+            // when
+            List<Post> actualPosts = await this.apiBroker.GetAllPostsAsync();
+
+            // then
+            foreach(Post expectedPost in expectedPosts) 
+            {
+                Post actualPost = 
+                    actualPosts.Single(post => post.Id == expectedPost.Id);
+
+                actualPost.Should().BeEquivalentTo(expectedPost);
+                //delete call to be added
+            }
+
         }
     }
 }

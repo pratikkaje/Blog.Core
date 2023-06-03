@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
+using Blog.Core.Models.Posts.Exceptions;
 using Blog.Core.Services.Foundations.Posts;
 using Microsoft.AspNetCore.Mvc;
 using RESTFulSense.Controllers;
@@ -23,5 +25,26 @@ namespace Blog.Core.Controllers
 
             return Created(addedPost);
         }
+
+        [HttpGet]
+        public ActionResult<IQueryable<Post>> GetAllPosts()
+        {
+            try
+            {
+                IQueryable<Post> returnedPosts = 
+                    this.postService.RetrieveAllPosts();
+
+                return Ok(returnedPosts);
+            }
+            catch (PostDependencyException postDependencyException)
+            {
+                return InternalServerError(postDependencyException);
+            }
+            catch (PostServiceException postServiceException)
+            {
+                return InternalServerError(postServiceException);
+            }
+        }
+
     }
 }
