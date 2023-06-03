@@ -35,7 +35,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         public ValueTask<Post> RetrievePostByIdAsync(Guid PostId)
         {
-            throw new NotImplementedException();
+            return this.storageBroker.SelectPostByIdAsync(PostId);
         }
     }
 }
