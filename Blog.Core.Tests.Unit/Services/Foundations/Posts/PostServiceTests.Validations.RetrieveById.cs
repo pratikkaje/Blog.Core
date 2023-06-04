@@ -13,7 +13,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
     public partial class PostServiceTests
     {
         [Fact]
-        public async void ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
+        public async Task ShouldThrowValidationExceptionOnRetrieveByIdIfIdIsInvalidAndLogItAsync()
         {
             // given
             Guid invalidPostId = Guid.Empty;
