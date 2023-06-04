@@ -59,6 +59,10 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
+            catch (NotFoundPostException notFoundException)
+            {
+                throw CreateAndLogValidationException(notFoundException);
+            }
             catch (DuplicateKeyException duplicateKeyException)
             {
                 var alreadyExistsPostException =

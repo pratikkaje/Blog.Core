@@ -32,6 +32,14 @@ namespace Blog.Core.Services.Foundations.Posts
         public void ValidatePostId(Guid postId) =>
             Validate((Rule: IsInvalid(postId), Parameter: nameof(Post.Id)));
 
+        public void ValidateStoragePost(Post maybePost, Guid postId)
+        {
+            if(maybePost is null)
+            {
+                throw new NotFoundPostException(postId);
+            }
+        }
+
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
             Condition = IsDateNotRecent(date),

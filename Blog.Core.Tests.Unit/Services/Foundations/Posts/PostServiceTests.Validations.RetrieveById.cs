@@ -71,7 +71,6 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             ValueTask<Post> retrievePostByIdTask = 
                 this.postService.RetrievePostByIdAsync(somePostId);
 
-
             // then
             await Assert.ThrowsAsync<PostValidationException>(() => 
                 retrievePostByIdTask.AsTask());

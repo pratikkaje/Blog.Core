@@ -41,6 +41,8 @@ namespace Blog.Core.Services.Foundations.Posts
                 Post maybePost = 
                     await this.storageBroker.SelectPostByIdAsync(postId);
 
+                ValidateStoragePost(maybePost, postId);
+
                 return maybePost;
 
             });
