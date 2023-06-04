@@ -33,9 +33,16 @@ namespace Blog.Core.Services.Foundations.Posts
         public IQueryable<Post> RetrieveAllPosts() =>
             TryCatch(() => this.storageBroker.SelectAllPosts());
 
-        public ValueTask<Post> RetrievePostByIdAsync(Guid PostId)
-        {
-            return this.storageBroker.SelectPostByIdAsync(PostId);
-        }
+        public ValueTask<Post> RetrievePostByIdAsync(Guid postId) =>
+            TryCatch(async () =>
+            {
+                ValidatePostId(postId);
+
+                Post maybePost = 
+                    await this.storageBroker.SelectPostByIdAsync(postId);
+
+                return maybePost;
+
+            });
     }
 }

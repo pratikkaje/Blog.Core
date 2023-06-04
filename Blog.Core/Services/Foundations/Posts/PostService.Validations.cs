@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reflection.Metadata;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -27,6 +28,9 @@ namespace Blog.Core.Services.Foundations.Posts
                 (Rule: IsNotRecent(post.CreatedDate), Parameter: nameof(Post.CreatedDate))
                 );
         }
+
+        public void ValidatePostId(Guid postId) =>
+            Validate((Rule: IsInvalid(postId), Parameter: nameof(Post.Id)));
 
         private dynamic IsNotRecent(DateTimeOffset date) => new
         {
