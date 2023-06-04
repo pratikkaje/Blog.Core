@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
@@ -14,5 +15,8 @@ namespace Blog.Core.Tests.Acceptance.Brokers
 
         public async ValueTask<List<Post>> GetAllPostsAsync() =>
             await this.apiFactoryClient.GetContentAsync<List<Post>>($"{PostsRelativeUrl}/");
+
+        public async ValueTask<Post> GetPostByIdAsync(Guid postId) =>
+            await this.apiFactoryClient.GetContentAsync<Post>($"{PostsRelativeUrl}/{postId}");
     }
 }

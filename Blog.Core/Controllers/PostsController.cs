@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
@@ -46,5 +47,33 @@ namespace Blog.Core.Controllers
             }
         }
 
+        [HttpGet("{postId}")]
+        public async ValueTask<ActionResult<Post>> GetPostByIdAsync(Guid postId)
+        {
+            try
+            {
+                Post post = 
+                    await this.postService.RetrievePostByIdAsync(postId);
+
+                return Ok(post);
+            }
+            catch(PostValidationException postValidationException)
+                when(postValidationException.InnerException is NotFoundPostException)
+            {
+                return NotFound(postValidationException.InnerException);
+            }
+            catch(PostValidationException postValidationException)
+            {
+                return BadRequest(postValidationException.InnerException);
+            }
+            catch (PostDependencyException postDependencyException)
+            {
+                return InternalServerError(postDependencyException);
+            }
+            catch(PostServiceException postServiceException)
+            {
+                return InternalServerError(postServiceException);
+            }
+        }
     }
 }

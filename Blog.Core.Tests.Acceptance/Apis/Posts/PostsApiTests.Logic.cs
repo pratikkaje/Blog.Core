@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
@@ -45,6 +46,21 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
                 //delete call to be added
             }
 
+        }
+
+        [Fact]
+        public async Task ShouldGetPostByIdAsync()
+        {
+            // given
+            Post randomPost = await PostRandomPostAsync();
+            Post expectedPost = randomPost;
+
+            // when
+            Post actualPost = await this.apiBroker.GetPostByIdAsync(randomPost.Id);
+
+            // then
+            actualPost.Should().BeEquivalentTo(expectedPost);
+            //Add deletecall
         }
     }
 }
