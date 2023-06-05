@@ -39,5 +39,17 @@ namespace Blog.Core.Brokers.Storages
 
             return retrievedPost;
         }
+        public async ValueTask<Post> UpdatePostAsync(Post post)
+        {
+            using var broker = 
+                new StorageBroker(this.configuration);
+
+            EntityEntry<Post> postEntityEntry = 
+                broker.Posts.Update(post);
+
+            await broker.SaveChangesAsync();
+
+            return postEntityEntry.Entity;
+        }
     }
 }

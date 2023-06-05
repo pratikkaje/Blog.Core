@@ -46,5 +46,10 @@ namespace Blog.Core.Services.Foundations.Posts
                 return maybePost;
 
             });
+
+        public ValueTask<Post> ModifyPostAsync(Post post)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

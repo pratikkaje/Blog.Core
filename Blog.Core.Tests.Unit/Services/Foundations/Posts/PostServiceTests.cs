@@ -70,6 +70,16 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
 
+        private static Post CreateRandomModifyPost(DateTimeOffset dates)
+        {
+            int randomDaysInPast = GetRandomNegativeNumber();
+            Post randomPost = CreateRandomPost(dates);
+
+            randomPost.CreatedDate = randomPost.CreatedDate.AddDays(randomDaysInPast);
+
+            return randomPost;
+        }
+
         private static Filler<Post> CreatePostFiller(DateTimeOffset dates)
         {
             var filler = new Filler<Post>();

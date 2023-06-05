@@ -10,5 +10,6 @@ namespace Blog.Core.Services.Foundations.Posts
         ValueTask<Post> AddPostAsync(Post post);
         IQueryable<Post> RetrieveAllPosts();
         ValueTask<Post> RetrievePostByIdAsync(Guid PostId);
+        ValueTask<Post> ModifyPostAsync(Post post);
     }
 }
