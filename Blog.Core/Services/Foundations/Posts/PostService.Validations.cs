@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Data;
 using System.Reflection.Metadata;
+using Azure.Messaging;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -32,8 +34,23 @@ namespace Blog.Core.Services.Foundations.Posts
         public void ValidatePostOnModify(Post post)
         {
             ValidatePostIsNotNull(post);
-            
             this.dateTimeBroker.GetCurrentDateTimeOffset();
+            Validate(
+                (Rule: IsInvalid(post.Id), Parameter: nameof(post.Id)),
+                (Rule: IsInvalid(post.Content), Parameter: nameof(post.Content)),
+                (Rule: IsInvalid(post.Author), Parameter: nameof(post.Author)),
+                (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(post.CreatedDate)),
+                (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)),
+
+                //(Rule: IsNotRecent(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)),
+
+                (Rule: IsSame(
+                    firstDate: post.UpdatedDate,
+                    secondDate: post.CreatedDate,
+                    secondDateName: nameof(post.CreatedDate)),
+                 Parameter: nameof(post.UpdatedDate))
+
+                );
         }
 
         public void ValidatePostId(Guid postId) =>
@@ -72,6 +89,15 @@ namespace Blog.Core.Services.Foundations.Posts
                 Message = $"Date is not same as the {secondDateName}"
             };
 
+        private static dynamic IsSame(
+            DateTimeOffset firstDate, 
+            DateTimeOffset secondDate, 
+            string secondDateName) => new
+        {
+            Condition = firstDate == secondDate,
+            Message = $"Date is same as {secondDateName}"
+        };
+
         private static void ValidatePostIsNotNull(Post post)
         {
             if (post == null)
@@ -100,19 +126,19 @@ namespace Blog.Core.Services.Foundations.Posts
 
         private static void Validate(params (dynamic Rule, string Parameter)[] validations)
         {
-            var invalidPostExeption = new InvalidPostException();
+            var invalidPostException = new InvalidPostException();
 
             foreach ((dynamic rule, string parameter) in validations)
             {
                 if (rule.Condition)
                 {
-                    invalidPostExeption.UpsertDataList(
+                    invalidPostException.UpsertDataList(
                         key: parameter,
                         value: rule.Message);
                 }
             }
 
-            invalidPostExeption.ThrowIfContainsErrors();
+            invalidPostException.ThrowIfContainsErrors();
         }
     }
 }
