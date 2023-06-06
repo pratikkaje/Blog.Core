@@ -47,9 +47,14 @@ namespace Blog.Core.Services.Foundations.Posts
 
             });
 
-        public ValueTask<Post> ModifyPostAsync(Post post)
+        public async ValueTask<Post> ModifyPostAsync(Post post)
         {
-            throw new NotImplementedException();
+            this.dateTimeBroker.GetCurrentDateTimeOffset();
+
+            Post retrievedPost = 
+                await this.storageBroker.SelectPostByIdAsync(post.Id);
+
+            return await this.storageBroker.UpdatePostAsync(post);
         }
     }
 }

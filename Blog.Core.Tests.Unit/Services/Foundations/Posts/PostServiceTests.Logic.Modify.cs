@@ -18,14 +18,14 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
         {
             // given
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            Post randomPost = CreateRandomPost(randomDate);//CreateRandomModifyPost(randomDate);
-            Post inputPost = randomPost;
-            Post storagePost = inputPost.DeepClone();
+            Post randomPost = CreateRandomPost(randomDate);
+            Post storagePost = randomPost.DeepClone();
 
-            Post updatedPost = storagePost;
-            updatedPost.UpdatedDate = 
+            Post inputPost = storagePost;
+            inputPost.UpdatedDate = 
                 storagePost.CreatedDate.AddDays(GetRandomNumber());
 
+            Post updatedPost = inputPost;
             Post expectedPost = updatedPost.DeepClone();
             Guid postId = inputPost.Id;
 
@@ -38,7 +38,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                     .ReturnsAsync(storagePost);
 
             this.storageBrokerMock.Setup(broker => 
-                broker.UpdatePostAsync(storagePost))
+                broker.UpdatePostAsync(inputPost))
                     .ReturnsAsync(updatedPost);
 
             // when
