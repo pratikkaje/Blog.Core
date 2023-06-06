@@ -38,7 +38,7 @@ namespace Blog.Core.Services.Foundations.Posts
             {
                 ValidatePostId(postId);
 
-                Post maybePost = 
+                Post maybePost =
                     await this.storageBroker.SelectPostByIdAsync(postId);
 
                 ValidateStoragePost(maybePost, postId);
@@ -47,14 +47,15 @@ namespace Blog.Core.Services.Foundations.Posts
 
             });
 
-        public async ValueTask<Post> ModifyPostAsync(Post post)
-        {
-            this.dateTimeBroker.GetCurrentDateTimeOffset();
+        public ValueTask<Post> ModifyPostAsync(Post post) =>
+            TryCatch(async () =>
+            {
+                ValidatePostOnModify(post);
 
-            Post retrievedPost = 
-                await this.storageBroker.SelectPostByIdAsync(post.Id);
+                Post retrievedPost = 
+                    await this.storageBroker.SelectPostByIdAsync(post.Id);
 
-            return await this.storageBroker.UpdatePostAsync(post);
-        }
+                return await this.storageBroker.UpdatePostAsync(post);
+            });            
     }
 }

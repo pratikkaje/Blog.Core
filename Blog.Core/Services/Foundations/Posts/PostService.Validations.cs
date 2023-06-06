@@ -29,6 +29,13 @@ namespace Blog.Core.Services.Foundations.Posts
                 );
         }
 
+        public void ValidatePostOnModify(Post post)
+        {
+            ValidatePostIsNotNull(post);
+            
+            this.dateTimeBroker.GetCurrentDateTimeOffset();
+        }
+
         public void ValidatePostId(Guid postId) =>
             Validate((Rule: IsInvalid(postId), Parameter: nameof(Post.Id)));
 
