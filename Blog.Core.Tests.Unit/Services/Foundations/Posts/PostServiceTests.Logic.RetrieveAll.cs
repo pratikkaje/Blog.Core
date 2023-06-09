@@ -11,7 +11,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
     public partial class PostServiceTests
     {
         [Fact]
-        public async Task ShouldReturnPosts()
+        public void ShouldReturnPosts()
         {
             // given
             IQueryable<Post> randomPosts = CreateRandomPosts();
