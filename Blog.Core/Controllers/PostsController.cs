@@ -32,7 +32,7 @@ namespace Blog.Core.Controllers
         {
             try
             {
-                IQueryable<Post> returnedPosts = 
+                IQueryable<Post> returnedPosts =
                     this.postService.RetrieveAllPosts();
 
                 return Ok(returnedPosts);
@@ -52,17 +52,17 @@ namespace Blog.Core.Controllers
         {
             try
             {
-                Post post = 
+                Post post =
                     await this.postService.RetrievePostByIdAsync(postId);
 
                 return Ok(post);
             }
-            catch(PostValidationException postValidationException)
-                when(postValidationException.InnerException is NotFoundPostException)
+            catch (PostValidationException postValidationException)
+                when (postValidationException.InnerException is NotFoundPostException)
             {
                 return NotFound(postValidationException.InnerException);
             }
-            catch(PostValidationException postValidationException)
+            catch (PostValidationException postValidationException)
             {
                 return BadRequest(postValidationException.InnerException);
             }
@@ -70,7 +70,7 @@ namespace Blog.Core.Controllers
             {
                 return InternalServerError(postDependencyException);
             }
-            catch(PostServiceException postServiceException)
+            catch (PostServiceException postServiceException)
             {
                 return InternalServerError(postServiceException);
             }

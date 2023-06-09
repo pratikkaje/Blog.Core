@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using FluentAssertions;
@@ -22,22 +19,22 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             Post storagePost = randomPost.DeepClone();
 
             Post inputPost = storagePost;
-            inputPost.UpdatedDate = 
+            inputPost.UpdatedDate =
                 storagePost.CreatedDate.AddDays(GetRandomNumber());
 
             Post updatedPost = inputPost;
             Post expectedPost = updatedPost.DeepClone();
             Guid postId = inputPost.Id;
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDate);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectPostByIdAsync(postId))
                     .ReturnsAsync(storagePost);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.UpdatePostAsync(inputPost))
                     .ReturnsAsync(updatedPost);
 
@@ -47,15 +44,15 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectPostByIdAsync(postId), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(postId),
                 Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.UpdatePostAsync(storagePost),
                 Times.Once);
 

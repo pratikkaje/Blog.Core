@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
@@ -37,9 +36,9 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             List<Post> actualPosts = await this.apiBroker.GetAllPostsAsync();
 
             // then
-            foreach(Post expectedPost in expectedPosts) 
+            foreach (Post expectedPost in expectedPosts)
             {
-                Post actualPost = 
+                Post actualPost =
                     actualPosts.Single(post => post.Id == expectedPost.Id);
 
                 actualPost.Should().BeEquivalentTo(expectedPost);

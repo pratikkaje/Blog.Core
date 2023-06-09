@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using Microsoft.Data.SqlClient;
 using Moq;
@@ -19,10 +14,10 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // given
             SqlException sqlException = GetSqlException();
 
-            var failedStorageException = 
+            var failedStorageException =
                 new FailedPostStorageException(sqlException);
 
-            var expectedPostDependencyException = 
+            var expectedPostDependencyException =
                 new PostDependencyException(failedStorageException);
 
             this.storageBrokerMock.Setup(broker =>
@@ -30,17 +25,17 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                     .Throws(sqlException);
 
             // when
-            Action retrieveAllPostsAction = () => 
+            Action retrieveAllPostsAction = () =>
                 this.postService.RetrieveAllPosts();
 
             // then
             Assert.Throws<PostDependencyException>(retrieveAllPostsAction);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectAllPosts(),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedPostDependencyException))),
                     Times.Once);
@@ -55,34 +50,34 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // given
             Exception serviceException = new Exception();
 
-            var failedPostServiceException = 
+            var failedPostServiceException =
                 new FailedPostServiceException(serviceException);
 
-            var expectedPostServiceException = 
+            var expectedPostServiceException =
                 new PostServiceException(failedPostServiceException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectAllPosts())
                     .Throws(serviceException);
 
             // when
-            Action retrieveAllPostsAction = () => 
+            Action retrieveAllPostsAction = () =>
                 this.postService.RetrieveAllPosts();
 
             // then
             Assert.Throws<PostServiceException>(retrieveAllPostsAction);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectAllPosts(), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectAllPosts(),
                 Times.Once);
 
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedPostServiceException))), 
+                    expectedPostServiceException))),
                     Times.Once);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
-        }    
+        }
     }
 }

@@ -52,10 +52,10 @@ namespace Blog.Core.Services.Foundations.Posts
             {
                 ValidatePostOnModify(post);
 
-                Post maybePost = 
+                Post maybePost =
                     await this.storageBroker.SelectPostByIdAsync(post.Id);
 
                 return await this.storageBroker.UpdatePostAsync(post);
-            });            
+            });
     }
 }

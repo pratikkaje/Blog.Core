@@ -32,7 +32,7 @@ namespace Blog.Core.Brokers.Storages
         }
         public async ValueTask<Post> SelectPostByIdAsync(Guid postId)
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(this.configuration);
 
             var retrievedPost = await broker.Posts.FindAsync(postId);
@@ -41,10 +41,10 @@ namespace Blog.Core.Brokers.Storages
         }
         public async ValueTask<Post> UpdatePostAsync(Post post)
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(this.configuration);
 
-            EntityEntry<Post> postEntityEntry = 
+            EntityEntry<Post> postEntityEntry =
                 broker.Posts.Update(post);
 
             await broker.SaveChangesAsync();

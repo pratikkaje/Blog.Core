@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
@@ -18,26 +15,26 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // given
             Post inputPost = null;
 
-            var nullPostException = 
+            var nullPostException =
                 new NullPostException();
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(nullPostException);
 
             // when
             ValueTask<Post> modifyPostTask = this.postService.ModifyPostAsync(inputPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 modifyPostTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedPostValidationException))), 
+                    expectedPostValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.UpdatePostAsync(inputPost), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdatePostAsync(inputPost),
                 Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -60,7 +57,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             var invalidPostException = new InvalidPostException();
 
             invalidPostException.AddData(
-                key: nameof(Post.Id), 
+                key: nameof(Post.Id),
                 values: "Id is required.");
 
             invalidPostException.AddData(
@@ -80,28 +77,28 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 "Date is required.",
                 $"Date is same as {nameof(Post.CreatedDate)}");
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
 
             // when
-            ValueTask<Post> modifyPostTask = 
+            ValueTask<Post> modifyPostTask =
                 this.postService.ModifyPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 modifyPostTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker => 
-                broker.GetCurrentDateTimeOffset(), 
+            this.dateTimeBrokerMock.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedPostValidationException))), 
+                    expectedPostValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.UpdatePostAsync(It.IsAny<Post>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.UpdatePostAsync(It.IsAny<Post>()),
                 Times.Never);
 
             this.loggingBrokerMock.VerifyNoOtherCalls();
@@ -122,10 +119,10 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 key: nameof(Post.UpdatedDate),
                 values: $"Date is same as {nameof(Post.CreatedDate)}");
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
 
-            this.dateTimeBrokerMock.Setup(broker => 
+            this.dateTimeBrokerMock.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDateTime);
 
@@ -133,19 +130,19 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             ValueTask<Post> modifyPostTask = this.postService.ModifyPostAsync(invalidPost);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 modifyPostTask.AsTask());
 
-            this.dateTimeBrokerMock.Verify(broker => 
+            this.dateTimeBrokerMock.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectPostByIdAsync(It.IsAny<Guid>()),
                 Times.Never);
 

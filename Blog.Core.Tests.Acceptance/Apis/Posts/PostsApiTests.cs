@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Tests.Acceptance.Brokers;
@@ -20,7 +19,7 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             CreateRandomPostFiller().Create();
 
         private static int GetRandomNumber() =>
-            new IntRange(min:2, max:10).GetValue();
+            new IntRange(min: 2, max: 10).GetValue();
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: new DateTime()).GetValue();
@@ -31,7 +30,7 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             int randomNumber = GetRandomNumber();
             var randomPosts = new List<Post>();
 
-            for(int i=0; i < randomNumber; i++)
+            for (int i = 0; i < randomNumber; i++)
             {
                 randomPosts.Add(await PostRandomPostAsync());
             }
@@ -42,7 +41,7 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
         private async ValueTask<Post> PostRandomPostAsync()
         {
             var randomPost = CreateRandomPost();
-            var postedPost = 
+            var postedPost =
                 await this.apiBroker.PostPostAsync(randomPost);
 
             return postedPost;

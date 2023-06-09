@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Data;
-using System.Reflection.Metadata;
-using Azure.Messaging;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -58,7 +55,7 @@ namespace Blog.Core.Services.Foundations.Posts
 
         public void ValidateStoragePost(Post maybePost, Guid postId)
         {
-            if(maybePost is null)
+            if (maybePost is null)
             {
                 throw new NotFoundPostException(postId);
             }
@@ -90,13 +87,13 @@ namespace Blog.Core.Services.Foundations.Posts
             };
 
         private static dynamic IsSame(
-            DateTimeOffset firstDate, 
-            DateTimeOffset secondDate, 
+            DateTimeOffset firstDate,
+            DateTimeOffset secondDate,
             string secondDateName) => new
-        {
-            Condition = firstDate == secondDate,
-            Message = $"Date is same as {secondDateName}"
-        };
+            {
+                Condition = firstDate == secondDate,
+                Message = $"Date is same as {secondDateName}"
+            };
 
         private static void ValidatePostIsNotNull(Post post)
         {

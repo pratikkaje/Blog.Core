@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using FluentAssertions;
@@ -23,18 +20,18 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             var storagePost = randomPost;
             var expectedPost = storagePost.DeepClone();
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectPostByIdAsync(inputPostId))
                     .ReturnsAsync(storagePost);
 
             // when
-            Post actualPost = 
+            Post actualPost =
                 await this.postService.RetrievePostByIdAsync(inputPostId);
 
             // then
             actualPost.Should().BeEquivalentTo(expectedPost);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectPostByIdAsync(It.IsAny<Guid>()),
                 Times.Once);
 

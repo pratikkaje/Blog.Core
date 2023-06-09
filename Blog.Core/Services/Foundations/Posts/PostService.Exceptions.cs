@@ -24,14 +24,14 @@ namespace Blog.Core.Services.Foundations.Posts
             }
             catch (SqlException sqlException)
             {
-                var failedPostStorageException = 
+                var failedPostStorageException =
                     new FailedPostStorageException(sqlException);
 
                 throw CreateAndLogCriticalDependencyException(failedPostStorageException);
             }
             catch (Exception exception)
             {
-                var failedPostServiceException = 
+                var failedPostServiceException =
                     new FailedPostServiceException(exception);
 
                 throw CreateAndLogServiceException(failedPostServiceException);
