@@ -2,7 +2,7 @@
 using ADotNet.Clients;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets;
 using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks;
-using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV1s;
+using ADotNet.Models.Pipelines.GithubPipelines.DotNets.Tasks.SetupDotNetTaskV3s;
 
 namespace Blog.Core.Infrastructure.Build
 {
@@ -29,44 +29,42 @@ namespace Blog.Core.Infrastructure.Build
                     }
                 },
 
-                Jobs = new Jobs
+                Jobs = new Dictionary<string, Job>
                 {
-                    Build = new BuildJob
                     {
-                        RunsOn = BuildMachines.WindowsLatest,
-
-                        Steps = new List<GithubTask>
+                        "build",
+                        new Job
                         {
-                          new CheckoutTaskV2
-                          {
-                              Name = "Pulling Code"
-                          },
+                            RunsOn = BuildMachines.WindowsLatest,
 
-                          new SetupDotNetTaskV1
-                          {
-                              Name = "Installing .NET",
-                              TargetDotNetVersion = new TargetDotNetVersion
-                              {
-                                  DotNetVersion = "7.0.202"
-                              }
-                          },
+                            Steps = new List<GithubTask>
+                            {
+                                new CheckoutTaskV3
+                                {
+                                    Name = "Check out"
+                                },
 
-                          new RestoreTask
-                          {
-                              Name = "Restoring .NET Packages"
-                          },
+                                new SetupDotNetTaskV3
+                                {
+                                    Name = "Installing .NET",
+                                    With = {DotNetVersion = "7.0.202" }
+                                },
 
-                          new DotNetBuildTask
-                          {
-                              Name = "Building Solution"
-                          },
+                                new RestoreTask
+                                {
+                                    Name = "Restoring .NET Packages"
+                                },
 
-                          new TestTask
-                          {
-                              Name = "Running Tests"
-                          }
+                                new DotNetBuildTask
+                                {
+                                    Name = "Building Solution"
+                                },
 
-
+                                new TestTask
+                                {
+                                    Name = "Running Tests"
+                                }
+                            }
                         }
                     }
                 }
