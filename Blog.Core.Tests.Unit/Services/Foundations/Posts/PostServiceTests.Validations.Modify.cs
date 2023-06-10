@@ -195,7 +195,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
-                broker.UpdatePostAsync(inputPost), 
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()), 
                 Times.Never);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

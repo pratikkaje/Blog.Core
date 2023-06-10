@@ -38,8 +38,7 @@ namespace Blog.Core.Services.Foundations.Posts
                 (Rule: IsInvalid(post.Author), Parameter: nameof(post.Author)),
                 (Rule: IsInvalid(post.CreatedDate), Parameter: nameof(post.CreatedDate)),
                 (Rule: IsInvalid(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)),
-
-                //(Rule: IsNotRecent(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)),
+                (Rule: IsNotRecent(post.UpdatedDate), Parameter: nameof(post.UpdatedDate)),
 
                 (Rule: IsSame(
                     firstDate: post.UpdatedDate,
