@@ -150,5 +150,57 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(InvalidMinuteCases))]
+        public async Task ShouldThrowValidationExceptionOnModifyIfUpdatedDateIsNotRecentAndLogItAsync(int minutes)
+        {
+            // given
+            DateTimeOffset dateTime = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomPost(dateTime);
+            Post inputPost = randomPost;
+
+            inputPost.UpdatedDate = 
+                dateTime.AddMinutes(minutes);
+
+            var invalidPostException = 
+                new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedDate), 
+                values: "Date is not recent.");
+
+            var expectedPostValidationException = 
+                new PostValidationException(invalidPostException);
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(dateTime);
+
+            // when
+            ValueTask<Post> modifyPostTask = 
+                this.postService.ModifyPostAsync(inputPost);
+
+            // then
+            await Assert.ThrowsAsync<PostValidationException>(() =>
+                modifyPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(),
+                Times.Once());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidationException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.UpdatePostAsync(inputPost), 
+                Times.Never);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
