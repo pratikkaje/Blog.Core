@@ -15,15 +15,13 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
         {
             // given
             DateTimeOffset randomDate = GetRandomDateTimeOffset();
-            Post randomPost = CreateRandomPost(randomDate);
-            Post storagePost = randomPost.DeepClone();
-
-            Post inputPost = storagePost;
-            inputPost.UpdatedDate =
-                storagePost.CreatedDate.AddDays(GetRandomNumber());
-
+            Post randomPost = CreateRandomModifyPost(randomDate);
+            Post inputPost = randomPost;
+            Post storagePost = inputPost.DeepClone();
+            storagePost.UpdatedDate = randomPost.CreatedDate;
             Post updatedPost = inputPost;
             Post expectedPost = updatedPost.DeepClone();
+
             Guid postId = inputPost.Id;
 
             this.dateTimeBrokerMock.Setup(broker =>
@@ -53,7 +51,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 Times.Once);
 
             this.storageBrokerMock.Verify(broker =>
-                broker.UpdatePostAsync(storagePost),
+                broker.UpdatePostAsync(inputPost),
                 Times.Once);
 
             this.dateTimeBrokerMock.VerifyNoOtherCalls();

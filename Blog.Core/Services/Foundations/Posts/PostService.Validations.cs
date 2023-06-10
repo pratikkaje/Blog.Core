@@ -31,7 +31,7 @@ namespace Blog.Core.Services.Foundations.Posts
         public void ValidatePostOnModify(Post post)
         {
             ValidatePostIsNotNull(post);
-            this.dateTimeBroker.GetCurrentDateTimeOffset();
+
             Validate(
                 (Rule: IsInvalid(post.Id), Parameter: nameof(post.Id)),
                 (Rule: IsInvalid(post.Content), Parameter: nameof(post.Content)),
@@ -45,7 +45,6 @@ namespace Blog.Core.Services.Foundations.Posts
                     secondDate: post.CreatedDate,
                     secondDateName: nameof(post.CreatedDate)),
                  Parameter: nameof(post.UpdatedDate))
-
                 );
         }
 
