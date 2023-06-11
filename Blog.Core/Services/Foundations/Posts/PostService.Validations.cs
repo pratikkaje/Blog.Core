@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -48,6 +49,16 @@ namespace Blog.Core.Services.Foundations.Posts
                 );
         }
 
+        public void ValidateAgainstStoragePostOnModify(Post inputPost, Post storagePost)
+        {
+            Validate(
+                (Rule: IsNotSame(
+                    firstDate: inputPost.CreatedDate, 
+                    storagePost.CreatedDate, 
+                    nameof(storagePost.CreatedDate)),Parameter: nameof(Post.CreatedDate))
+                );
+        }
+
         public void ValidatePostId(Guid postId) =>
             Validate((Rule: IsInvalid(postId), Parameter: nameof(Post.Id)));
 
@@ -81,7 +92,7 @@ namespace Blog.Core.Services.Foundations.Posts
             string secondDateName) => new
             {
                 Condition = firstDate != secondDate,
-                Message = $"Date is not same as the {secondDateName}"
+                Message = $"Date is not same as {secondDateName}"
             };
 
         private static dynamic IsSame(

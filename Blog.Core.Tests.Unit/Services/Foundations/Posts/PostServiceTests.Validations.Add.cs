@@ -129,7 +129,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 
             invalidPostException.AddData(
                 key: nameof(Post.UpdatedDate),
-                values: $"Date is not same as the {nameof(Post.CreatedDate)}");
+                values: $"Date is not same as {nameof(Post.CreatedDate)}");
 
             var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
