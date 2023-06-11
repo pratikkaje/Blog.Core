@@ -57,6 +57,14 @@ namespace Blog.Core.Services.Foundations.Posts
                     storagePost.CreatedDate, 
                     nameof(storagePost.CreatedDate)),Parameter: nameof(Post.CreatedDate))
                 );
+
+            Validate(
+                (Rule: IsSame(
+                    firstDate: inputPost.UpdatedDate,
+                    secondDate: storagePost.UpdatedDate,
+                    secondDateName: nameof(storagePost.UpdatedDate)), Parameter: nameof(Post.UpdatedDate))
+                );
+
         }
 
         public void ValidatePostId(Guid postId) =>

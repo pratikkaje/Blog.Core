@@ -329,15 +329,15 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // given
             DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
             Post randomPost = CreateRandomModifyPost(randomDateTime);
-            Post inputPost = randomPost;
-            Post storagePost = inputPost;
+            Post invalidPost = randomPost;
+            Post storagePost = randomPost;
 
             this.dateTimeBrokerMock.Setup(broker => 
                 broker.GetCurrentDateTimeOffset())
                     .Returns(randomDateTime);
             
             this.storageBrokerMock.Setup(broker => 
-                broker.SelectPostByIdAsync(inputPost.Id))
+                broker.SelectPostByIdAsync(invalidPost.Id))
                     .ReturnsAsync(storagePost);
 
             var invalidPostException = new InvalidPostException();
@@ -351,14 +351,18 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 
             // when
             ValueTask<Post> modifyPostTask = 
-                this.postService.ModifyPostAsync(inputPost);
+                this.postService.ModifyPostAsync(invalidPost);
 
             // then
             await Assert.ThrowsAsync<PostValidationException>(() => 
                 modifyPostTask.AsTask());
 
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(),
+                Times.Once);
+
             this.storageBrokerMock.Verify(broker => 
-                broker.SelectPostByIdAsync(inputPost.Id),
+                broker.SelectPostByIdAsync(invalidPost.Id),
                 Times.Once());
 
             this.loggingBrokerMock.Verify(broker => 
@@ -366,8 +370,9 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                     expectedPostValidationException))),
                     Times.Once);
 
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
-            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();            
         }
     }
 }
