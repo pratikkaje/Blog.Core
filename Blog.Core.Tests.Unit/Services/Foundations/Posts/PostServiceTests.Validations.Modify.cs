@@ -322,5 +322,52 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.storageBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowValidationExceptionOnModifyIfStorageUpdatedDateSameAsUpdatedDateAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = GetRandomDateTimeOffset();
+            Post randomPost = CreateRandomModifyPost(randomDateTime);
+            Post inputPost = randomPost;
+            Post storagePost = inputPost;
+
+            this.dateTimeBrokerMock.Setup(broker => 
+                broker.GetCurrentDateTimeOffset())
+                    .Returns(randomDateTime);
+            
+            this.storageBrokerMock.Setup(broker => 
+                broker.SelectPostByIdAsync(inputPost.Id))
+                    .ReturnsAsync(storagePost);
+
+            var invalidPostException = new InvalidPostException();
+
+            invalidPostException.AddData(
+                key: nameof(Post.UpdatedDate), 
+                values: $"Date is same as {nameof(Post.UpdatedDate)}");
+
+            var expectedPostValidationException = 
+                new PostValidationException(invalidPostException);
+
+            // when
+            ValueTask<Post> modifyPostTask = 
+                this.postService.ModifyPostAsync(inputPost);
+
+            // then
+            await Assert.ThrowsAsync<PostValidationException>(() => 
+                modifyPostTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectPostByIdAsync(inputPost.Id),
+                Times.Once());
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostValidationException))),
+                    Times.Once);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
