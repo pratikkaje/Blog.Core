@@ -15,6 +15,21 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
         public PostsApiTests(ApiBroker apiBroker) =>
             this.apiBroker = apiBroker;
 
+        private static Post UpdateRandomPost(Post inputPost)
+        {
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+
+            var filler = new Filler<Post>();
+
+            filler.Setup()
+                    .OnProperty(post => post.Id).Use(inputPost.Id)
+                    .OnProperty(post => post.CreatedDate).Use(inputPost.CreatedDate)
+                    .OnProperty(post => post.UpdatedDate).Use(now);
+            //.OnType<DateTimeOffset>().Use
+
+            return filler.Create();
+        }
+
         private static Post CreateRandomPost() =>
             CreateRandomPostFiller().Create();
 

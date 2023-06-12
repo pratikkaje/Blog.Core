@@ -61,5 +61,23 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             actualPost.Should().BeEquivalentTo(expectedPost);
             //Add deletecall
         }
+
+        [Fact]
+        public async Task ShouldPutPostAsync()
+        {
+            // given
+            Post randomPost = await PostRandomPostAsync();
+            Post modifiedPost = UpdateRandomPost(randomPost);
+
+            // when
+            await this.apiBroker.PutPostByIdAsync(modifiedPost);
+
+            Post actualPost = 
+                await this.apiBroker.GetPostByIdAsync(randomPost.Id);
+
+            // then
+            actualPost.Should().BeEquivalentTo(modifiedPost);
+            //delete post
+        }
     }
 }

@@ -17,5 +17,8 @@ namespace Blog.Core.Tests.Acceptance.Brokers
 
         public async ValueTask<Post> GetPostByIdAsync(Guid postId) =>
             await this.apiFactoryClient.GetContentAsync<Post>($"{PostsRelativeUrl}/{postId}");
+
+        public async ValueTask<Post> PutPostByIdAsync(Post post) =>
+            await this.apiFactoryClient.PutContentAsync(PostsRelativeUrl, post);
     }
 }
