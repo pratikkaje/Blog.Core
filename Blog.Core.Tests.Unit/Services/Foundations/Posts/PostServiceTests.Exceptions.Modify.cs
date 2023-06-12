@@ -106,5 +106,52 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.storageBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfDbUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            DateTimeOffset randomDateTime = 
+                GetRandomDateTimeOffset();
+
+            Post randomPost = 
+                CreateRandomModifyPost(randomDateTime);
+
+            Post somePost = randomPost;
+
+            var dbUpdateConcurrencyException = 
+                new DbUpdateConcurrencyException();
+
+            var lockedPostException = 
+                new LockedPostException(dbUpdateConcurrencyException);
+
+            var expectedPostDependencyValidationException = 
+                new PostDependencyValidationException(lockedPostException);
+
+            this.dateTimeBrokerMock.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dbUpdateConcurrencyException);
+
+            // when
+            ValueTask<Post> modifyPostTask = 
+                this.postService.ModifyPostAsync(somePost);
+
+            // then
+            await Assert.ThrowsAsync<PostDependencyValidationException>(() => 
+                modifyPostTask.AsTask());
+
+            this.dateTimeBrokerMock.Verify(broker => 
+                broker.GetCurrentDateTimeOffset(),
+                Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostDependencyValidationException))),
+                    Times.Once);
+
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.storageBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
