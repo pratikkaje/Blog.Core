@@ -11,5 +11,6 @@ namespace Blog.Core.Brokers.Storages
         IQueryable<Post> SelectAllPosts();
         ValueTask<Post> SelectPostByIdAsync(Guid postId);
         ValueTask<Post> UpdatePostAsync(Post post);
+        ValueTask<Post> DeletePostAsync(Post post);
     }
 }

@@ -51,5 +51,17 @@ namespace Blog.Core.Brokers.Storages
 
             return postEntityEntry.Entity;
         }
+        public async ValueTask<Post> DeletePostAsync(Post post)
+        {
+            using var broker = 
+                new StorageBroker(this.configuration);
+
+            EntityEntry<Post> postEntityEntry = 
+                broker.Posts.Remove(post);
+
+            await broker.SaveChangesAsync();
+
+            return postEntityEntry.Entity;
+        }
     }
 }
