@@ -81,21 +81,21 @@ namespace Blog.Core.Controllers
         {
             try
             {
-                Post modifiedPost = 
+                Post modifiedPost =
                     await this.postService.ModifyPostAsync(post);
 
                 return Ok(modifiedPost);
             }
-            catch(PostValidationException postValidationException)
-                when(postValidationException.InnerException is NotFoundPostException)
+            catch (PostValidationException postValidationException)
+                when (postValidationException.InnerException is NotFoundPostException)
             {
-                return NotFound(postValidationException.InnerException);                
+                return NotFound(postValidationException.InnerException);
             }
-            catch(PostValidationException postValidationException)
+            catch (PostValidationException postValidationException)
             {
                 return BadRequest(postValidationException.InnerException);
             }
-            catch(PostDependencyValidationException postDependencyValidationException)
+            catch (PostDependencyValidationException postDependencyValidationException)
             {
                 return Conflict(postDependencyValidationException.InnerException);
             }

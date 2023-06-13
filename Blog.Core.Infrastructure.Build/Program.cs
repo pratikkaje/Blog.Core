@@ -83,7 +83,7 @@ namespace Blog.Core.Infrastructure.Build
                 Directory.CreateDirectory(directoryPath);
             }
 
-            adotNetClient.SerializeAndWriteToFile(githubPipeline,path: buildScriptPath);
+            adotNetClient.SerializeAndWriteToFile(githubPipeline, path: buildScriptPath);
         }
     }
 }

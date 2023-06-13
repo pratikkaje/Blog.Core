@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 
@@ -53,9 +52,9 @@ namespace Blog.Core.Services.Foundations.Posts
         {
             Validate(
                 (Rule: IsNotSame(
-                    firstDate: inputPost.CreatedDate, 
-                    storagePost.CreatedDate, 
-                    nameof(storagePost.CreatedDate)),Parameter: nameof(Post.CreatedDate))
+                    firstDate: inputPost.CreatedDate,
+                    storagePost.CreatedDate,
+                    nameof(storagePost.CreatedDate)), Parameter: nameof(Post.CreatedDate))
                 );
 
             Validate(

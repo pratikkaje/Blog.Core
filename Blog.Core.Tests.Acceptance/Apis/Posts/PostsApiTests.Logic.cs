@@ -72,7 +72,7 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             // when
             await this.apiBroker.PutPostByIdAsync(modifiedPost);
 
-            Post actualPost = 
+            Post actualPost =
                 await this.apiBroker.GetPostByIdAsync(randomPost.Id);
 
             // then

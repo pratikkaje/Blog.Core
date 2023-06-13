@@ -51,11 +51,11 @@ namespace Blog.Core.Services.Foundations.Posts
             TryCatch(async () =>
             {
                 ValidatePostOnModify(post);
-                
+
                 Post maybePost =
                     await this.storageBroker.SelectPostByIdAsync(post.Id);
 
-                ValidateStoragePost(maybePost,post.Id);
+                ValidateStoragePost(maybePost, post.Id);
                 ValidateAgainstStoragePostOnModify(inputPost: post, storagePost: maybePost);
 
                 return await this.storageBroker.UpdatePostAsync(post);

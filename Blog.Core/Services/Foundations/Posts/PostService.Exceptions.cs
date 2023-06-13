@@ -70,9 +70,9 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 throw CreateAndLogDependencyValidationException(alreadyExistsPostException);
             }
-            catch(DbUpdateConcurrencyException dbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
-                var lockedPostException = 
+                var lockedPostException =
                     new LockedPostException(dbUpdateConcurrencyException);
 
                 throw CreateAndLogDependencyValidationException(lockedPostException);
