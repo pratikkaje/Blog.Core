@@ -60,5 +60,10 @@ namespace Blog.Core.Services.Foundations.Posts
 
                 return await this.storageBroker.UpdatePostAsync(post);
             });
+
+        public ValueTask<Post> RemovePostByIdAsync(Guid postId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
