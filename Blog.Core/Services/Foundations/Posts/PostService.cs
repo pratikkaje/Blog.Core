@@ -61,12 +61,15 @@ namespace Blog.Core.Services.Foundations.Posts
                 return await this.storageBroker.UpdatePostAsync(post);
             });
 
-        public async ValueTask<Post> RemovePostByIdAsync(Guid postId)
-        {
-            Post maybePost = 
-                await this.storageBroker.SelectPostByIdAsync(postId);
+        public ValueTask<Post> RemovePostByIdAsync(Guid postId) =>
+            TryCatch(async () => 
+            {
+                ValidatePostId(postId);
 
-            return await this.storageBroker.DeletePostAsync(maybePost);
-        }
+                Post maybePost =
+                    await this.storageBroker.SelectPostByIdAsync(postId);
+
+                return await this.storageBroker.DeletePostAsync(maybePost);
+            });
     }
 }
