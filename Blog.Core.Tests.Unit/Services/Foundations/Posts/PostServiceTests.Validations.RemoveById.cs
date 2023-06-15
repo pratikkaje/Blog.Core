@@ -63,7 +63,7 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
                 new PostValidationException(notFoundPostException);
 
             this.storageBrokerMock.Setup(broker => 
-                broker.SelectPostByIdAsync(invalidPostId))
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noPost);
 
             // when

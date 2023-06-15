@@ -5,6 +5,7 @@ using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
 using Blog.Core.Brokers.Storages;
 using Blog.Core.Models.Posts;
+using Microsoft.Extensions.Hosting;
 
 namespace Blog.Core.Services.Foundations.Posts
 {
@@ -69,6 +70,7 @@ namespace Blog.Core.Services.Foundations.Posts
                 Post maybePost =
                     await this.storageBroker.SelectPostByIdAsync(postId);
 
+                ValidateStoragePost(maybePost, postId);
                 return await this.storageBroker.DeletePostAsync(maybePost);
             });
     }
