@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
 
@@ -46,6 +48,51 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.loggingBrokerMock.Verify(broker => 
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedPostDependencyException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.DeletePostAsync(It.IsAny<Post>()), 
+                Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationOnRemoveIfDBUpdateConcurrencyErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid somePostId = Guid.NewGuid();
+
+            var dbUpdateConcurrencyException = 
+                new DbUpdateConcurrencyException();
+
+            var lockedPostException = 
+                new LockedPostException(dbUpdateConcurrencyException);
+
+            var expectedPostDependencyValidationException = 
+                new PostDependencyValidationException(lockedPostException);
+
+            this.storageBrokerMock.Setup(broker => 
+                broker.SelectPostByIdAsync(somePostId))
+                    .ThrowsAsync(dbUpdateConcurrencyException);
+
+            // when
+            ValueTask<Post> removePostByIdTask = 
+                this.postService.RemovePostByIdAsync(somePostId);
+
+            // then
+            await Assert.ThrowsAsync<PostDependencyValidationException>(() => 
+                removePostByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()), 
+                Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostDependencyValidationException))),
                     Times.Once);
 
             this.storageBrokerMock.Verify(broker => 
