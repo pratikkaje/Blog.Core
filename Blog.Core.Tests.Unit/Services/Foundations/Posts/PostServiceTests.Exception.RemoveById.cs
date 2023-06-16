@@ -103,5 +103,49 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             this.loggingBrokerMock.VerifyNoOtherCalls();
             this.dateTimeBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnRemoveIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            Guid somPostId = Guid.NewGuid();
+
+            var serviceException = new Exception();
+
+            var failedPostServiceException = 
+                new FailedPostServiceException(serviceException);
+
+            var expectedPostServiceException = 
+                new PostServiceException(failedPostServiceException);
+
+            this.storageBrokerMock.Setup(broker => 
+                broker.SelectPostByIdAsync(somPostId))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<Post> removePostByIdTask = 
+                this.postService.RemovePostByIdAsync(somPostId);
+
+            // then
+            await Assert.ThrowsAsync<PostServiceException>(() => 
+                removePostByIdTask.AsTask());
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()), 
+                Times.Once);
+
+            this.loggingBrokerMock.Verify(broker => 
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedPostServiceException))),
+                    Times.Once);
+
+            this.storageBrokerMock.Verify(broker => 
+                broker.DeletePostAsync(It.IsAny<Post>()), 
+                Times.Never);
+
+            this.storageBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+            this.dateTimeBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
