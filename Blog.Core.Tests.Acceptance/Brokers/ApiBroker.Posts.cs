@@ -20,5 +20,8 @@ namespace Blog.Core.Tests.Acceptance.Brokers
 
         public async ValueTask<Post> PutPostByIdAsync(Post post) =>
             await this.apiFactoryClient.PutContentAsync(PostsRelativeUrl, post);
+
+        public async ValueTask<Post> DeletePostByIdAsync(Guid postId) =>
+            await this.apiFactoryClient.DeleteContentAsync<Post>($"{PostsRelativeUrl}/{postId}");
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
@@ -78,6 +79,24 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             // then
             actualPost.Should().BeEquivalentTo(modifiedPost);
             //delete post
+        }
+
+        [Fact]
+        public async Task ShouldDeletePostAsync()
+        {
+            // given
+            Post postedPost = await PostRandomPostAsync();
+            Guid postId = postedPost.Id;
+
+            Post storagePost = 
+                await this.apiBroker.GetPostByIdAsync(postId);
+
+            // when
+            Post deletedPost = 
+                await this.apiBroker.DeletePostByIdAsync(storagePost.Id); 
+
+            // then
+            deletedPost.Should().BeEquivalentTo(postedPost);
         }
     }
 }
