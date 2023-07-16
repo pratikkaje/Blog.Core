@@ -1,8 +1,7 @@
-﻿using Blog.Core.Models.Posts;
+﻿using System.Threading.Tasks;
 using Blog.Core.Models.Profiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Threading.Tasks;
 
 namespace Blog.Core.Brokers.Storages
 {
@@ -12,10 +11,10 @@ namespace Blog.Core.Brokers.Storages
 
         public async ValueTask<Profile> InsertProfileAsync(Profile profile)
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(this.configuration);
 
-            EntityEntry<Profile> profileEntityEntry = 
+            EntityEntry<Profile> profileEntityEntry =
                 await broker.Profiles.AddAsync(profile);
 
             await broker.SaveChangesAsync();

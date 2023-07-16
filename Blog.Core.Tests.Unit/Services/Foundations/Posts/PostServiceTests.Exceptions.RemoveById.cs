@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
@@ -23,35 +19,35 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             Guid inputPostId = randomPostId;
             SqlException sqlException = GetSqlException();
 
-            var failedPostStorageException = 
+            var failedPostStorageException =
                 new FailedPostStorageException(sqlException);
 
-            var expectedPostDependencyException = 
+            var expectedPostDependencyException =
                 new PostDependencyException(failedPostStorageException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectPostByIdAsync(inputPostId))
                     .ThrowsAsync(sqlException);
 
             // when
-            ValueTask<Post> removePostByIdTask = 
+            ValueTask<Post> removePostByIdTask =
                 this.postService.RemovePostByIdAsync(inputPostId);
 
             // then
-            await Assert.ThrowsAsync<PostDependencyException>(() => 
+            await Assert.ThrowsAsync<PostDependencyException>(() =>
                 removePostByIdTask.AsTask());
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.SelectPostByIdAsync(It.IsAny<Guid>()),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedPostDependencyException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.DeletePostAsync(It.IsAny<Post>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeletePostAsync(It.IsAny<Post>()),
                 Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -65,38 +61,38 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // given
             Guid somePostId = Guid.NewGuid();
 
-            var dbUpdateConcurrencyException = 
+            var dbUpdateConcurrencyException =
                 new DbUpdateConcurrencyException();
 
-            var lockedPostException = 
+            var lockedPostException =
                 new LockedPostException(dbUpdateConcurrencyException);
 
-            var expectedPostDependencyValidationException = 
+            var expectedPostDependencyValidationException =
                 new PostDependencyValidationException(lockedPostException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectPostByIdAsync(somePostId))
                     .ThrowsAsync(dbUpdateConcurrencyException);
 
             // when
-            ValueTask<Post> removePostByIdTask = 
+            ValueTask<Post> removePostByIdTask =
                 this.postService.RemovePostByIdAsync(somePostId);
 
             // then
-            await Assert.ThrowsAsync<PostDependencyValidationException>(() => 
+            await Assert.ThrowsAsync<PostDependencyValidationException>(() =>
                 removePostByIdTask.AsTask());
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectPostByIdAsync(It.IsAny<Guid>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostDependencyValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.DeletePostAsync(It.IsAny<Post>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeletePostAsync(It.IsAny<Post>()),
                 Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();
@@ -112,35 +108,35 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
 
             var serviceException = new Exception();
 
-            var failedPostServiceException = 
+            var failedPostServiceException =
                 new FailedPostServiceException(serviceException);
 
-            var expectedPostServiceException = 
+            var expectedPostServiceException =
                 new PostServiceException(failedPostServiceException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectPostByIdAsync(somPostId))
                     .ThrowsAsync(serviceException);
 
             // when
-            ValueTask<Post> removePostByIdTask = 
+            ValueTask<Post> removePostByIdTask =
                 this.postService.RemovePostByIdAsync(somPostId);
 
             // then
-            await Assert.ThrowsAsync<PostServiceException>(() => 
+            await Assert.ThrowsAsync<PostServiceException>(() =>
                 removePostByIdTask.AsTask());
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectPostByIdAsync(It.IsAny<Guid>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedPostServiceException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.DeletePostAsync(It.IsAny<Post>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.DeletePostAsync(It.IsAny<Post>()),
                 Times.Never);
 
             this.storageBrokerMock.VerifyNoOtherCalls();

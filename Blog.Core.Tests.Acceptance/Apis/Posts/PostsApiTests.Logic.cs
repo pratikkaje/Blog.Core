@@ -88,12 +88,12 @@ namespace Blog.Core.Tests.Acceptance.Apis.Posts
             Post postedPost = await PostRandomPostAsync();
             Guid postId = postedPost.Id;
 
-            Post storagePost = 
+            Post storagePost =
                 await this.apiBroker.GetPostByIdAsync(postId);
 
             // when
-            Post deletedPost = 
-                await this.apiBroker.DeletePostByIdAsync(storagePost.Id); 
+            Post deletedPost =
+                await this.apiBroker.DeletePostByIdAsync(storagePost.Id);
 
             // then
             deletedPost.Should().BeEquivalentTo(postedPost);

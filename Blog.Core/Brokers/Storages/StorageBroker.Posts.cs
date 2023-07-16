@@ -53,10 +53,10 @@ namespace Blog.Core.Brokers.Storages
         }
         public async ValueTask<Post> DeletePostAsync(Post post)
         {
-            using var broker = 
+            using var broker =
                 new StorageBroker(this.configuration);
 
-            EntityEntry<Post> postEntityEntry = 
+            EntityEntry<Post> postEntityEntry =
                 broker.Posts.Remove(post);
 
             await broker.SaveChangesAsync();

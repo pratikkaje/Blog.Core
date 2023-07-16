@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Blog.Core.Models.Posts;
 using Blog.Core.Models.Posts.Exceptions;
@@ -18,29 +15,29 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             // given
             Guid invalidPostId = Guid.Empty;
 
-            var invalidPostException = 
+            var invalidPostException =
                 new InvalidPostException();
 
             invalidPostException.AddData(
-                key: nameof(Post.Id), 
+                key: nameof(Post.Id),
                 values: "Id is required.");
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(invalidPostException);
 
             // when
-            ValueTask<Post> removePostByIdTask = 
+            ValueTask<Post> removePostByIdTask =
                 this.postService.RemovePostByIdAsync(invalidPostId);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 removePostByIdTask.AsTask());
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedPostValidationException))),Times.Once);
+                    expectedPostValidationException))), Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeletePostAsync(It.IsAny<Post>()),
                 Times.Never);
 
@@ -56,34 +53,34 @@ namespace Blog.Core.Tests.Unit.Services.Foundations.Posts
             Guid invalidPostId = Guid.NewGuid();
             Post noPost = null;
 
-            var notFoundPostException = 
+            var notFoundPostException =
                 new NotFoundPostException(invalidPostId);
 
-            var expectedPostValidationException = 
+            var expectedPostValidationException =
                 new PostValidationException(notFoundPostException);
 
-            this.storageBrokerMock.Setup(broker => 
+            this.storageBrokerMock.Setup(broker =>
                 broker.SelectPostByIdAsync(It.IsAny<Guid>()))
                     .ReturnsAsync(noPost);
 
             // when
-            ValueTask<Post> removePostByIdTask = 
+            ValueTask<Post> removePostByIdTask =
                 this.postService.RemovePostByIdAsync(invalidPostId);
 
             // then
-            await Assert.ThrowsAsync<PostValidationException>(() => 
+            await Assert.ThrowsAsync<PostValidationException>(() =>
                 removePostByIdTask.AsTask());
 
-            this.storageBrokerMock.Verify(broker => 
-                broker.SelectPostByIdAsync(It.IsAny<Guid>()), 
+            this.storageBrokerMock.Verify(broker =>
+                broker.SelectPostByIdAsync(It.IsAny<Guid>()),
                 Times.Once);
 
-            this.loggingBrokerMock.Verify(broker => 
+            this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
-                    expectedPostValidationException))), 
+                    expectedPostValidationException))),
                     Times.Once);
 
-            this.storageBrokerMock.Verify(broker => 
+            this.storageBrokerMock.Verify(broker =>
                 broker.DeletePostAsync(It.IsAny<Post>()),
                 Times.Never);
 

@@ -114,34 +114,34 @@ namespace Blog.Core.Controllers
         {
             try
             {
-                Post deletedPost = 
+                Post deletedPost =
                     await this.postService.RemovePostByIdAsync(postId);
 
                 return Ok(deletedPost);
             }
             catch (PostValidationException postValidationException)
-                when(postValidationException.InnerException is NotFoundPostException)
+                when (postValidationException.InnerException is NotFoundPostException)
             {
                 return NotFound(postValidationException.InnerException);
             }
-            catch(PostValidationException postValidationException)
+            catch (PostValidationException postValidationException)
             {
                 return BadRequest(postValidationException.InnerException);
             }
-            catch(PostDependencyValidationException postDependencyValidationException)
-                when(postDependencyValidationException.InnerException is LockedPostException)
+            catch (PostDependencyValidationException postDependencyValidationException)
+                when (postDependencyValidationException.InnerException is LockedPostException)
             {
                 return Locked(postDependencyValidationException.InnerException);
             }
-            catch(PostDependencyValidationException postDependencyValidationException)
+            catch (PostDependencyValidationException postDependencyValidationException)
             {
                 return BadRequest(postDependencyValidationException);
             }
-            catch(PostDependencyException postDependencyException)
+            catch (PostDependencyException postDependencyException)
             {
                 return InternalServerError(postDependencyException);
             }
-            catch(PostServiceException postserviceException)
+            catch (PostServiceException postserviceException)
             {
                 return InternalServerError(postserviceException);
             }

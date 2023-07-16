@@ -5,7 +5,6 @@ using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
 using Blog.Core.Brokers.Storages;
 using Blog.Core.Models.Posts;
-using Microsoft.Extensions.Hosting;
 
 namespace Blog.Core.Services.Foundations.Posts
 {
@@ -63,7 +62,7 @@ namespace Blog.Core.Services.Foundations.Posts
             });
 
         public ValueTask<Post> RemovePostByIdAsync(Guid postId) =>
-            TryCatch(async () => 
+            TryCatch(async () =>
             {
                 ValidatePostId(postId);
 

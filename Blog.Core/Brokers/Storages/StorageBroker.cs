@@ -1,7 +1,4 @@
-﻿using System.Threading.Tasks;
-using Blog.Core.Models.Posts;
-using Blog.Core.Models.Profiles;
-using EFxceptions;
+﻿using EFxceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
