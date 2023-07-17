@@ -19,9 +19,9 @@ namespace Blog.Core.Services.Foundations.Profiles
             this.dateTimeBroker = dateTimeBroker;
         }
 
-        public ValueTask<Profile> AddProfileAsync(Profile profile)
+        public async ValueTask<Profile> AddProfileAsync(Profile profile)
         {
-            throw new System.NotImplementedException();
+            return await this.storageBroker.InsertProfileAsync(profile);
         }
     }
 }
