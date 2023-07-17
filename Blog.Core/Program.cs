@@ -3,6 +3,7 @@ using Blog.Core.Brokers.DateTimes;
 using Blog.Core.Brokers.Loggings;
 using Blog.Core.Brokers.Storages;
 using Blog.Core.Services.Foundations.Posts;
+using Blog.Core.Services.Foundations.Profiles;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -21,6 +22,7 @@ namespace Blog.Core
             builder.Services.AddTransient<IDateTimeBroker, DateTimeBroker>();
             builder.Services.AddTransient<IStorageBroker, StorageBroker>();
             builder.Services.AddTransient<IPostService, PostService>();
+            builder.Services.AddTransient<IProfileService, ProfileService>();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
